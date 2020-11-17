@@ -23,25 +23,29 @@ if(!file.exists(data.filename)) {
     }
 
 
-# read the 2007-02-01 and 2007-02-02 data from the data file
+# data preparation
 
-data.file <- file(data.filename)
-data.Extracted <- read.table(text = grep("^[1,2]/2/2007", readLines(data.file), value = TRUE), 
-                             sep = ";",
-                             col.names = c("Date", "Time", "Global_active_power", 
-                                           "Global_reactive_power", "Voltage", 
-                                           "Global_intensity", "Sub_metering_1",
-                                           "Sub_metering_2", "Sub_metering_3"),
-                             colClasses = c("character", "character", "numeric",
-                                            "numeric", "numeric",
-                                            "numeric", "numeric",
-                                            "numeric", "numeric"), 
-                             na.strings = "?")
+if(exists("data.All")) {
+    rm(data.All)
+}
+data.All <- read.table(data.filename, 
+                       header = TRUE,
+                       sep = ";",
+                       colClasses = c("character", "character", "numeric",
+                                      "numeric", "numeric",
+                                      "numeric", "numeric",
+                                      "numeric", "numeric"), 
+                       na.strings = "?")
 
 # Convert Date and Time from character format to date and datetime format
 
-data.Extracted$Date <- as.Date(data.Extracted$Date, format("%d/%m/%Y"))
-data.Extracted$Time <- as.POSIXct(paste(data.Extracted$Date, data.Extracted$Time))
+data.All$Date <- as.Date(data.All$Date, format("%d/%m/%Y"))
+data.All$Time <- as.POSIXct(paste(data.All$Date, data.All$Time))
+
+if(exists("data.Extracted")) {
+    rm(data.Extracted)
+}
+data.Extracted <- subset(data.All, data.All$Date >= as.Date("2007-02-01") & data.All$Date <= as.Date("2007-02-02"))
 
 
 # plot Global Active Power
@@ -57,7 +61,8 @@ with(data.Extracted, hist(Global_active_power,
                           main = "Global Active Power", 
                           col = "red"))
 
-# close the device
+# close the device and connections
 
 dev.off()
+closeAllConnections()
 
