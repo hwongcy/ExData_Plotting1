@@ -51,11 +51,11 @@ data.Extracted <- subset(data.All, data.All$Date >= as.Date("2007-02-01") & data
 
 # plot Global Active Power
 
-filename.plot5 <- "./plot5.png"
+filename.plot4 <- "./plot4.png"
 
 # plot the figure and save in the file plot4.png
 
-png(filename.plot5, width = 480, height = 480, units = "px")
+png(filename.plot4, width = 480, height = 480, units = "px")
 
 
 # setup the multi plot
